@@ -4,6 +4,11 @@ import pandas
 import requests
 from urllib.error import URLError
 
+def get_fruitvice_data(this_fruit_choice):
+    fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_choice)
+    fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())#normalize the json response 
+    return fruitvice_normalized
+
 streamlit.title('My Parents New Healthy Diner')
 
 streamlit.header('Breakfast Menu')
@@ -30,9 +35,8 @@ try:
   if not fruit_choice:
      streamlit.error("Please select a fruit to get information")
   else:
-    fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_choice)
-    fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())#normalize the json response 
-    streamlit.dataframe(fruityvice_normalized)# format into table
+    back_from_function = get_fruityvice_data(fruitchoice)
+    streamlit.dataframe(back_from_function)# format into table
 except URLError as e:
   streamlit.error()
       
